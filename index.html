@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyFlow — Built for Students</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border: 0; }
+
+    :root {
+      --bg:       #000212;
+      --bg-1:     #0a0b0f;
+      --bg-2:     rgba(255,255,255,0.025);
+      --bg-3:     rgba(255,255,255,0.05);
+      --border:   rgba(255,255,255,0.08);
+      --border-2: rgba(255,255,255,0.12);
+      --border-3: rgba(255,255,255,0.18);
+      --text:     #f7f8f8;
+      --text-2:   #b4bcd0;
+      --text-3:   rgba(180,188,208,0.5);
+      --brand:    #5e6ad2;
+      --brand-l:  #828fff;
+      --brand-dim:rgba(94,106,210,0.10);
+      --max-w:    1024px;
+      --pad:      32px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.5; overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(ellipse 80% 55% at 50% -10%, rgba(94,106,210,0.14) 0%, transparent 65%);
+    }
+    body > * { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px; padding: 0 var(--pad);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(0,2,18,0.72); backdrop-filter: blur(20px);
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-color: var(--border-2); }
+
+    .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .nav-icon {
+      width: 24px; height: 24px; border-radius: 6px; background: var(--brand);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 10px; color: #fff;
+    }
+    .nav-name { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 400; color: var(--text-2); text-decoration: none; transition: color 0.15s; }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--brand); color: #fff;
+      padding: 7px 16px; border-radius: 7px;
+      font-size: 14px; font-weight: 500; text-decoration: none;
+      transition: opacity 0.15s; letter-spacing: -0.1px;
+    }
+    .nav-cta:hover { opacity: 0.82; }
+    .nav-cta:active { opacity: 0.7; }
+
+    /* ── HERO ── */
+    .hero { text-align: center; padding: 112px var(--pad) 88px; }
+    .hero-inner { max-width: 680px; margin: 0 auto; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      border: 1px solid var(--border-2); background: var(--bg-2);
+      color: var(--text-2); font-size: 13px; font-weight: 400;
+      padding: 5px 14px; border-radius: 999px; margin-bottom: 40px;
+      letter-spacing: -0.1px;
+    }
+    .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--brand-l); flex-shrink: 0; }
+
+    .hero h1 {
+      font-size: clamp(42px, 6.5vw, 72px); font-weight: 700;
+      letter-spacing: -0.04em; line-height: 1.05;
+      color: var(--text); margin-bottom: 24px;
+    }
+    .hero h1 em { font-style: normal; color: var(--brand-l); }
+
+    .hero-sub {
+      font-size: 18px; font-weight: 400; color: var(--text-2);
+      line-height: 1.65; max-width: 500px; margin: 0 auto 40px;
+    }
+
+    .hero-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--brand); color: #fff;
+      padding: 11px 22px; border-radius: 8px;
+      font-size: 15px; font-weight: 500; text-decoration: none; letter-spacing: -0.1px;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.82; }
+    .btn-ghost {
+      background: transparent; color: var(--text-2);
+      padding: 11px 22px; border-radius: 8px;
+      font-size: 15px; font-weight: 500; text-decoration: none; letter-spacing: -0.1px;
+      border: 1px solid var(--border-2);
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border-3); }
+
+    /* ── HERO VISUAL ── */
+    .hero-visual {
+      max-width: 900px; margin: 72px auto 0;
+      position: relative;
+    }
+    .hero-visual::before {
+      content: ''; position: absolute; bottom: -40px; left: 50%;
+      transform: translateX(-50%);
+      width: 80%; height: 120px;
+      background: radial-gradient(ellipse, rgba(94,106,210,0.18) 0%, transparent 70%);
+      filter: blur(20px); pointer-events: none; z-index: -1;
+    }
+
+    .browser-frame {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .browser-bar {
+      display: flex; align-items: center; gap: 0;
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+    .b-dots { display: flex; gap: 6px; }
+    .b-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border-3); }
+    .b-url {
+      flex: 1; text-align: center;
+      font-size: 12px; color: var(--text-3); margin: 0 16px;
+      background: var(--border); border-radius: 5px; padding: 3px 12px;
+    }
+    .browser-content { padding: 20px; }
+
+    /* App mock inside browser */
+    .app-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .app-title { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
+    .app-badge { background: var(--brand); color: #fff; font-size: 9px; font-weight: 600; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.3px; }
+    .app-task {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-3); border-radius: 7px;
+      padding: 10px 14px; margin-bottom: 6px; border: 1px solid var(--border);
+    }
+    .app-check { width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid; flex-shrink: 0; }
+    .app-check.done { background: var(--brand); border-color: var(--brand); display: flex; align-items: center; justify-content: center; }
+    .app-check.done::after { content: '✓'; color: #fff; font-size: 8px; font-weight: 700; }
+    .app-task-text { font-size: 12px; color: var(--text); flex: 1; }
+    .app-chip { font-size: 9px; font-weight: 500; padding: 2px 8px; border-radius: 5px; }
+    .chip-blue  { background: rgba(59,130,246,0.12); color: #7ab3fb; }
+    .chip-brand { background: var(--brand-dim); color: var(--brand-l); }
+    .chip-green { background: rgba(52,211,153,0.1); color: #6ee7b7; }
+    .app-row { display: flex; gap: 8px; margin-top: 12px; }
+    .app-card {
+      flex: 1; background: var(--bg-1); border-radius: 8px;
+      padding: 12px; border: 1px solid var(--border);
+    }
+    .app-card-label { font-size: 9px; font-weight: 600; color: var(--text-3); letter-spacing: 0.5px; margin-bottom: 4px; }
+    .app-card-val { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .xp-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; }
+    .xp-fill { height: 100%; width: 68%; background: linear-gradient(90deg, var(--brand), var(--brand-l)); border-radius: 2px; }
+    .streak-dots { display: flex; gap: 3px; margin-top: 8px; }
+    .s-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--brand); }
+    .s-dot.off { background: var(--border); }
+
+    /* ── STATS ── */
+    .stats-section {
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 64px var(--pad);
+    }
+    .stats-inner { display: flex; justify-content: center; gap: 96px; flex-wrap: wrap; max-width: var(--max-w); margin: 0 auto; }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 42px; font-weight: 700; letter-spacing: -0.04em; color: var(--text); line-height: 1; margin-bottom: 8px; }
+    .stat-label { font-size: 14px; color: var(--text-2); }
+
+    /* ── FEATURES ── */
+    .features-section { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--pad); }
+
+    .feature-row {
+      display: flex; align-items: center; gap: 80px;
+      padding: 96px 0; border-bottom: 1px solid var(--border);
+    }
+    .feature-row:last-child { border-bottom: none; }
+    .feature-row.flip { flex-direction: row-reverse; }
+
+    .feat-text { flex: 1 1 0; }
+    .feat-eyebrow { font-size: 12px; font-weight: 500; color: var(--brand-l); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px; }
+    .feat-title { font-size: clamp(24px, 3vw, 36px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 14px; color: var(--text); }
+    .feat-desc { font-size: 15px; color: var(--text-2); line-height: 1.7; margin-bottom: 24px; }
+    .feat-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .feat-bullets li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--text-2); line-height: 1.55;
+    }
+    .feat-bullets li::before {
+      content: '';
+      flex-shrink: 0; width: 16px; height: 16px; border-radius: 4px; margin-top: 1px;
+      background: var(--brand-dim) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8l3 3 6-6' stroke='%23828fff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+      border: 1px solid rgba(130,143,255,0.2);
+    }
+
+    .feat-visual { flex: 1 1 0; }
+    .feat-card {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden; padding: 24px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { padding: 96px var(--pad); border-top: 1px solid var(--border); }
+    .how-inner { max-width: var(--max-w); margin: 0 auto; }
+    .sec-header { text-align: center; margin-bottom: 56px; }
+    .sec-eyebrow { font-size: 12px; font-weight: 500; color: var(--brand-l); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+    .sec-h2 { font-size: clamp(28px, 3.5vw, 44px); font-weight: 700; letter-spacing: -0.04em; line-height: 1.1; color: var(--text); margin-bottom: 14px; }
+    .sec-sub { font-size: 16px; color: var(--text-2); max-width: 440px; margin: 0 auto; line-height: 1.65; }
+
+    .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; }
+    .step-card { background: var(--bg-1); padding: 32px 28px; }
+    .step-n { font-size: 12px; font-weight: 600; color: var(--brand-l); letter-spacing: 0.05em; margin-bottom: 20px; }
+    .step-icon { font-size: 28px; margin-bottom: 16px; display: block; line-height: 1; }
+    .step-card h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; color: var(--text); }
+    .step-card p { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+    /* ── FAQ ── */
+    .faq-section { padding: 96px var(--pad); border-top: 1px solid var(--border); }
+    .faq-inner { max-width: 680px; margin: 0 auto; }
+    .faq-list { margin-top: 48px; display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; }
+    .faq-item { background: var(--bg-1); padding: 22px 26px; }
+    .faq-q { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 8px; letter-spacing: -0.02em; }
+    .faq-a { font-size: 14px; color: var(--text-2); line-height: 1.7; }
+
+    /* ── CTA ── */
+    .cta-section { padding: 120px var(--pad); text-align: center; border-top: 1px solid var(--border); position: relative; overflow: hidden; }
+    .cta-section::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 350px;
+      background: radial-gradient(ellipse at top, rgba(94,106,210,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 { font-size: clamp(28px, 4vw, 52px); font-weight: 700; letter-spacing: -0.04em; margin-bottom: 16px; color: var(--text); line-height: 1.1; }
+    .cta-section p { font-size: 17px; color: var(--text-2); margin-bottom: 40px; line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 32px var(--pad); }
+    .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .footer-icon { width: 22px; height: 22px; border-radius: 5px; background: var(--brand); color: #fff; font-weight: 700; font-size: 9px; display: flex; align-items: center; justify-content: center; }
+    .footer-name { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
+    .footer-team { display: flex; align-items: center; gap: 8px; }
+    .footer-team-label { font-size: 12px; color: var(--text-3); }
+    .footer-team-logo { height: 26px; border-radius: 6px; opacity: 0.65; }
+    .footer-copy { font-size: 13px; color: var(--text-3); }
+    .footer-link { font-size: 14px; color: var(--brand-l); text-decoration: none; font-weight: 500; }
+    .footer-link:hover { text-decoration: underline; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal[data-delay="1"] { transition-delay: 0.08s; }
+    .reveal[data-delay="2"] { transition-delay: 0.16s; }
+    .reveal[data-delay="3"] { transition-delay: 0.24s; }
+    .reveal[data-delay="4"] { transition-delay: 0.32s; }
+
+    /* Hero entrance */
+    .hero-inner { animation: heroUp 0.8s cubic-bezier(0.22,1,0.36,1) both; }
+    .hero-visual { animation: heroUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.15s both; }
+    @keyframes heroUp { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:none} }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      :root { --pad: 20px; }
+      nav { height: 52px; }
+      .nav-links { display: none; }
+      .hero { padding: 80px var(--pad) 64px; }
+      .feature-row, .feature-row.flip { flex-direction: column; gap: 40px; padding: 64px 0; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .stats-inner { gap: 48px; }
+      .hero-visual { margin-top: 52px; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 38px; }
+      .stat-num { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">
+      <div class="nav-icon">SF</div>
+      <span class="nav-name">StudyFlow</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a class="nav-cta" href="https://studyflow-hcas.netlify.app" target="_blank">Open App</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        StudyFlow 2026 Release
+      </div>
+      <h1>Built for students<br>who want to <em>get ahead</em></h1>
+      <p class="hero-sub">Track tasks, earn XP, break assignments down with AI — and never lose your progress again.</p>
+      <div class="hero-btns">
+        <a class="btn-primary" href="https://studyflow-hcas.netlify.app" target="_blank">Get Started Free</a>
+        <a class="btn-ghost" href="#features">See Features</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="browser-frame">
+        <div class="browser-bar">
+          <div class="b-dots">
+            <div class="b-dot"></div>
+            <div class="b-dot"></div>
+            <div class="b-dot"></div>
+          </div>
+          <div class="b-url">studyflow-hcas.netlify.app</div>
+        </div>
+        <div class="browser-content">
+          <div class="app-header">
+            <div class="app-title">My Tasks</div>
+            <div class="app-badge">TODAY</div>
+          </div>
+          <div class="app-task">
+            <div class="app-check" style="border-color:#3b82f6"></div>
+            <div class="app-task-text">Math — Chapter 5 Problems</div>
+            <div class="app-chip chip-blue">Due today</div>
+          </div>
+          <div class="app-task">
+            <div class="app-check done"></div>
+            <div class="app-task-text" style="text-decoration:line-through;color:var(--text-3)">English Essay — Draft</div>
+            <div class="app-chip chip-brand">Done ✓</div>
+          </div>
+          <div class="app-task">
+            <div class="app-check" style="border-color:#34d399"></div>
+            <div class="app-task-text">Science Project Research</div>
+            <div class="app-chip chip-green">Due tomorrow</div>
+          </div>
+          <div class="app-row">
+            <div class="app-card">
+              <div class="app-card-label">LEVEL 12</div>
+              <div class="app-card-val">820 / 1200 XP</div>
+              <div class="xp-bar"><div class="xp-fill"></div></div>
+            </div>
+            <div class="app-card">
+              <div class="app-card-label">🔥 STREAK</div>
+              <div class="app-card-val">7 Days</div>
+              <div class="streak-dots">
+                <div class="s-dot"></div><div class="s-dot"></div>
+                <div class="s-dot"></div><div class="s-dot"></div>
+                <div class="s-dot"></div>
+                <div class="s-dot off"></div><div class="s-dot off"></div>
+              </div>
+            </div>
+            <div class="app-card">
+              <div class="app-card-label">THIS WEEK</div>
+              <div class="app-card-val">12 Done</div>
+              <div class="streak-dots" style="margin-top:8px">
+                <div class="s-dot"></div><div class="s-dot"></div>
+                <div class="s-dot"></div><div class="s-dot off"></div>
+                <div class="s-dot off"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-section">
+    <div class="stats-inner">
+      <div class="stat-item reveal" data-delay="1">
+        <div class="stat-num" data-count="5" data-suffix="×">5×</div>
+        <div class="stat-label">Faster task planning with AI</div>
+      </div>
+      <div class="stat-item reveal" data-delay="2">
+        <div class="stat-num" data-count="100" data-suffix="%">100%</div>
+        <div class="stat-label">Free for every student</div>
+      </div>
+      <div class="stat-item reveal" data-delay="3">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Tasks, XP &amp; streaks</div>
+      </div>
+      <div class="stat-item reveal" data-delay="4">
+        <div class="stat-num" data-count="0" data-suffix="">0</div>
+        <div class="stat-label">Data lost on updates</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features-section" id="features">
+
+    <!-- Feature 1: Task Management -->
+    <div class="feature-row">
+      <div class="feat-text reveal">
+        <div class="feat-eyebrow">Task Management</div>
+        <h2 class="feat-title">Improved task tracking — your work, organized.</h2>
+        <p class="feat-desc">Add homework by subject, set custom deadlines, and track every assignment from first step to done. Built around how students actually work.</p>
+        <ul class="feat-bullets">
+          <li>Group tasks by subject — Math, English, Science, History, CS, Drama</li>
+          <li>Custom deadlines: today, tomorrow, this week, or pick a date</li>
+          <li>See everything due at a glance, sorted by urgency</li>
+        </ul>
+      </div>
+      <div class="feat-visual reveal" data-delay="1">
+        <div class="feat-card">
+          <div class="app-header" style="margin-bottom:14px">
+            <div class="app-title">My Tasks</div>
+            <div style="font-size:11px;color:var(--text-3)">4 due today</div>
+          </div>
+          <div class="app-task"><div class="app-check" style="border-color:#3b82f6"></div><div class="app-task-text">Math — Chapter 5 Problems</div><div class="app-chip chip-blue">Math</div></div>
+          <div class="app-task"><div class="app-check" style="border-color:#a78bfa"></div><div class="app-task-text">English Essay — Body paragraphs</div><div class="app-chip" style="background:rgba(167,139,250,0.1);color:#c4b5fd">English</div></div>
+          <div class="app-task"><div class="app-check done"></div><div class="app-task-text" style="text-decoration:line-through;color:var(--text-3)">CS Homework — Binary search</div><div class="app-chip chip-brand">Done ✓</div></div>
+          <div class="app-task"><div class="app-check" style="border-color:#34d399"></div><div class="app-task-text">Science — Lab report write-up</div><div class="app-chip chip-green">Science</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 2: AI Breakdown -->
+    <div class="feature-row flip">
+      <div class="feat-text reveal">
+        <div class="feat-eyebrow">AI Breakdown</div>
+        <h2 class="feat-title">Cycle and Project Analytics — let AI plan the work.</h2>
+        <p class="feat-desc">Attach your assignment PDF or type the task name. Gemini AI reads it and instantly breaks it into 5 clear micro-steps so nothing feels overwhelming.</p>
+        <ul class="feat-bullets">
+          <li>Works with images, PDFs, Word files, and typed descriptions</li>
+          <li>5 specific, actionable steps tailored to the exact assignment</li>
+          <li>Check off steps one by one — completing all auto-finishes the task</li>
+        </ul>
+      </div>
+      <div class="feat-visual reveal" data-delay="1">
+        <div class="feat-card">
+          <div style="font-size:11px;font-weight:600;color:var(--brand-l);margin-bottom:14px;letter-spacing:0.05em;text-transform:uppercase">AI Breakdown — English Essay</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="app-task" style="gap:12px"><div class="app-check done"></div><div class="app-task-text" style="font-size:12px;text-decoration:line-through;color:var(--text-3)">Read the prompt and underline key words</div></div>
+            <div class="app-task" style="gap:12px"><div class="app-check done"></div><div class="app-task-text" style="font-size:12px;text-decoration:line-through;color:var(--text-3)">Write a one-sentence thesis statement</div></div>
+            <div class="app-task" style="gap:12px"><div class="app-check" style="border-color:var(--brand)"></div><div class="app-task-text" style="font-size:12px">Write 3 body paragraphs with evidence</div></div>
+            <div class="app-task" style="gap:12px"><div class="app-check" style="border-color:var(--border-2)"></div><div class="app-task-text" style="font-size:12px;color:var(--text-3)">Write intro and conclusion</div></div>
+            <div class="app-task" style="gap:12px"><div class="app-check" style="border-color:var(--border-2)"></div><div class="app-task-text" style="font-size:12px;color:var(--text-3)">Proofread and format citations</div></div>
+          </div>
+          <div style="margin-top:16px;display:flex;align-items:center;gap:8px">
+            <div class="xp-bar" style="flex:1;height:4px"><div class="xp-fill" style="width:40%"></div></div>
+            <div style="font-size:11px;color:var(--text-3)">2 / 5 done</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 3: XP & Streaks -->
+    <div class="feature-row">
+      <div class="feat-text reveal">
+        <div class="feat-eyebrow">XP &amp; Streaks</div>
+        <h2 class="feat-title">Project Updates — make progress feel like progress.</h2>
+        <p class="feat-desc">Every completed task earns XP based on difficulty. Build your streak day by day, level up your account, and actually feel rewarded for doing homework.</p>
+        <ul class="feat-bullets">
+          <li>XP scales with task length: 15 min = 25 XP, 1 hr = 100 XP</li>
+          <li>Streak resets if you miss a day — motivation to stay consistent</li>
+          <li>Level badge visible on your profile, rising as you work</li>
+        </ul>
+      </div>
+      <div class="feat-visual reveal" data-delay="1">
+        <div class="feat-card" style="display:flex;flex-direction:column;gap:12px">
+          <div class="app-card" style="background:var(--bg-2)">
+            <div class="app-card-label">YOUR LEVEL</div>
+            <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
+              <div style="font-size:28px;font-weight:700;letter-spacing:-0.04em;color:var(--text)">12</div>
+              <div style="font-size:13px;color:var(--text-3)">820 / 1200 XP</div>
+            </div>
+            <div class="xp-bar" style="margin-top:10px"><div class="xp-fill"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="app-card" style="background:var(--bg-2)">
+              <div class="app-card-label">🔥 STREAK</div>
+              <div class="app-card-val" style="margin-top:4px;font-size:20px">7 days</div>
+              <div class="streak-dots" style="flex-wrap:wrap">
+                <div class="s-dot"></div><div class="s-dot"></div><div class="s-dot"></div><div class="s-dot"></div><div class="s-dot"></div><div class="s-dot off"></div><div class="s-dot off"></div>
+              </div>
+            </div>
+            <div class="app-card" style="background:var(--bg-2)">
+              <div class="app-card-label">THIS WEEK</div>
+              <div class="app-card-val" style="margin-top:4px;font-size:20px">+450 XP</div>
+              <div style="font-size:11px;color:var(--brand-l);margin-top:6px">↑ 12 tasks done</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /features -->
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section" id="how">
+    <div class="how-inner">
+      <div class="sec-header">
+        <div class="sec-eyebrow reveal">How It Works</div>
+        <h2 class="sec-h2 reveal" data-delay="1">Up and running in 3 steps</h2>
+        <p class="sec-sub reveal" data-delay="2">No setup. No downloads. Just open the app and start doing less homework stress.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-n">STEP 01</div>
+          <span class="step-icon">👤</span>
+          <h3>Create your free account</h3>
+          <p>Sign up with your email in seconds. No credit card needed, no tricks.</p>
+        </div>
+        <div class="step-card reveal" data-delay="1">
+          <div class="step-n">STEP 02</div>
+          <span class="step-icon">✨</span>
+          <h3>Add a task, let AI help</h3>
+          <p>Type your assignment or attach a file — AI breaks it into 5 clear steps instantly.</p>
+        </div>
+        <div class="step-card reveal" data-delay="2">
+          <div class="step-n">STEP 03</div>
+          <span class="step-icon">🏆</span>
+          <h3>Complete steps, earn XP</h3>
+          <p>Check off each step, earn XP, level up, and keep your streak alive every day.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section" id="faq">
+    <div class="faq-inner">
+      <div class="sec-header">
+        <div class="sec-eyebrow reveal">FAQ</div>
+        <h2 class="sec-h2 reveal" data-delay="1">Got questions?</h2>
+        <p class="sec-sub reveal" data-delay="2">Everything you need to know about StudyFlow.</p>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <div class="faq-q">Is StudyFlow free?</div>
+          <div class="faq-a">Yes — completely free. No subscription, no hidden fees, ever.</div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q">What subjects are supported?</div>
+          <div class="faq-a">Math, English, Science, History, CS, Drama, and Other for anything else.</div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q">What is the AI breakdown?</div>
+          <div class="faq-a">Gemini AI splits your task into 5 clear micro-steps so it feels manageable, not overwhelming. Works with text, images, PDFs, and more.</div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q">Does my data sync across devices?</div>
+          <div class="faq-a">Yes — sign in on any device and your tasks, XP, and streak are all there.</div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q">What is the XP system?</div>
+          <div class="faq-a">Every completed task earns XP based on how long it takes. Level up every 300 XP and watch your rank rise over time.</div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q">Do I need to install anything?</div>
+          <div class="faq-a">No download needed. StudyFlow runs in your browser on any device.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2 class="reveal">Ready to take control<br>of your homework?</h2>
+    <p class="reveal" data-delay="1">Free forever. No downloads. Works on any device.</p>
+    <div class="hero-btns reveal" data-delay="2">
+      <a class="btn-primary" href="https://studyflow-hcas.netlify.app" target="_blank">Open StudyFlow</a>
+      <a class="btn-ghost" href="#features">Learn More</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <a class="footer-logo" href="#">
+        <div class="footer-icon">SF</div>
+        <span class="footer-name">StudyFlow</span>
+      </a>
+      <div class="footer-team">
+        <span class="footer-team-label">Built by</span>
+        <img class="footer-team-logo" src="./team-logo.png" alt="Marc, Dave, Chloe &amp; Alison" />
+      </div>
+      <span class="footer-copy">© 2026 StudyFlow. All rights reserved.</span>
+      <a class="footer-link" href="https://studyflow-hcas.netlify.app" target="_blank">Open App →</a>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 8), { passive: true });
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    function countUp(el, target, suffix) {
+      const dur = 1400; let t0 = null;
+      const tick = ts => {
+        if (!t0) t0 = ts;
+        const p = Math.min((ts - t0) / dur, 1);
+        el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+    const statObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const t = parseInt(e.target.dataset.count, 10), s = e.target.dataset.suffix || '';
+          if (!isNaN(t)) countUp(e.target, t, s);
+          statObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-num[data-count]').forEach(el => statObs.observe(el));
+  </script>
+</body>
+</html>
